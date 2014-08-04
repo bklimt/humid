@@ -1,23 +1,23 @@
 package main
 
 import (
-  "encoding/json"
-  "flag"
+	"encoding/json"
+	"flag"
 	"fmt"
-  "github.com/bklimt/hue"
+	"github.com/bklimt/hue"
 	"github.com/bklimt/midi"
-  "io/ioutil"
-  "strconv"
+	"io/ioutil"
+	"strconv"
 )
 
 type PresetMap map[string]map[string]hue.LightRequestBody
 
 func midiOn(note int, lights *hue.Hue, presets *PresetMap) {
-  if lightMap, ok := (*presets)[strconv.Itoa(note)]; ok {
-    for light, req := range lightMap {
-      lights.ChangeLight(light, &req)
-    }
-  }
+	if lightMap, ok := (*presets)[strconv.Itoa(note)]; ok {
+		for light, req := range lightMap {
+			lights.ChangeLight(light, &req)
+		}
+	}
 }
 
 func main() {
@@ -25,26 +25,26 @@ func main() {
 	userName := flag.String("username", "HueGoRaspberryPiUser", "Username for Hue hub.")
 	deviceType := flag.String("device_type", "HueGoRaspberryPi", "Device type for Hue hub.")
 
-  presetsFile := flag.String("presets", "./presets.json", "Presets file to use.")
+	presetsFile := flag.String("presets", "./presets.json", "Presets file to use.")
 
-  flag.Parse()
+	flag.Parse()
 
 	lights := &hue.Hue{*ip, *userName, *deviceType}
 
-  b, err := ioutil.ReadFile(*presetsFile)
-  if err != nil {
-    fmt.Printf("Unable to open presets file: %v\n", err)
-    return
-  }
+	b, err := ioutil.ReadFile(*presetsFile)
+	if err != nil {
+		fmt.Printf("Unable to open presets file: %v\n", err)
+		return
+	}
 
-  var presets PresetMap
-  err = json.Unmarshal(b, &presets)
-  if err != nil {
-    fmt.Printf("Unable to parse presets file: %v\n", err)
-    return
-  }
+	var presets PresetMap
+	err = json.Unmarshal(b, &presets)
+	if err != nil {
+		fmt.Printf("Unable to parse presets file: %v\n", err)
+		return
+	}
 
-  fmt.Printf("Presets: %v", presets)
+	fmt.Printf("Presets: %v", presets)
 
 	c := make(chan interface{})
 	midi.Listen(c)
@@ -54,7 +54,7 @@ func main() {
 			fmt.Printf("Controller event: %d %d\n", event.Param, event.Value)
 		case midi.NoteOn:
 			fmt.Printf("Note on: %d\n", event.Note)
-      midiOn(event.Note, lights, &presets)
+			midiOn(event.Note, lights, &presets)
 		case midi.NoteOff:
 			fmt.Printf("Note off: %d\n", event.Note)
 		}
