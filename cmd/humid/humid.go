@@ -12,13 +12,13 @@ import (
 
 type PresetMap struct {
 	Controls map[string]map[string][]string
-	Notes    map[string]map[string]hue.LightRequestBody `json:"notes"`
+	Notes    map[string]map[string]hue.PutLightRequest `json:"notes"`
 }
 
 func midiOn(note int, lights *hue.Hue, presets *PresetMap) {
 	if lightMap, ok := presets.Notes[strconv.Itoa(note)]; ok {
 		for light, req := range lightMap {
-			lights.ChangeLight(light, &req)
+			lights.PutLight(light, &req)
 		}
 	}
 }
@@ -26,7 +26,7 @@ func midiOn(note int, lights *hue.Hue, presets *PresetMap) {
 func midiControl(param, value int, lights *hue.Hue, presets *PresetMap) {
 	if lightMap, ok := presets.Controls[strconv.Itoa(param)]; ok {
 		for light, attrs := range lightMap {
-			req := &hue.LightRequestBody{}
+			req := &hue.PutLightRequest{}
 			for _, attr := range attrs {
 				switch attr {
 				case "on":
@@ -46,7 +46,7 @@ func midiControl(param, value int, lights *hue.Hue, presets *PresetMap) {
 					req.Hue = &hue
 				}
 			}
-			lights.ChangeLight(light, req)
+			lights.PutLight(light, req)
 		}
 	}
 }
