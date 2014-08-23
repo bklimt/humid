@@ -99,20 +99,25 @@ func midiOn(note int) {
 }
 
 func midiControl(param, value int) {
+	t := true
+	f := false
 	if lightMap, ok := presets.Controls[strconv.Itoa(param)]; ok {
 		for light, attrs := range lightMap {
 			req := &hue.PutLightRequest{}
 			for _, attr := range attrs {
 				switch attr {
 				case "on":
-					t := true
 					req.On = &t
 				case "off":
-					f := false
 					req.On = &f
 				case "bri":
-					bri := value * 2
-					req.Bri = &bri
+					if value == 0 {
+						req.On = &f
+					} else {
+						bri := value * 2
+						req.Bri = &bri
+						req.On = &t
+					}
 				case "sat":
 					sat := value * 2
 					req.Sat = &sat
