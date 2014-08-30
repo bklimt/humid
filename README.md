@@ -14,11 +14,11 @@ You'll need to make sure your Hue is configured correctly. Build the `hue` comma
 
 Then press the link button on your Hue router and use the command-line tool to register the app.
 
-    $GOPATH/bin/hue --ip="YOUR.ROUTER.IP.ADDRESS" --register
+    $GOPATH/bin/hue --hue_ip="YOUR.ROUTER.IP.ADDRESS" --register
 
 Once that it complete, you can start the `humid` app to listen for MIDI events to control the lights.
 
-    $GOPATH/bin/humid --ip="YOUR.ROUTER.IP.ADDRESS"
+    $GOPATH/bin/humid --hue_ip="YOUR.ROUTER.IP.ADDRESS"
 
 While `humid` is running, you can see it as a MIDI receiver on your system by running:
 
