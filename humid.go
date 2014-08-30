@@ -1,3 +1,4 @@
+// The humid command lets you control Philips Hue lightbulbs from a MIDI controller.
 package main
 
 import (
