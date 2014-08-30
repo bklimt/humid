@@ -11,7 +11,7 @@ import (
 	"strconv"
 )
 
-var lights hue.Hue
+var lights *hue.Hue
 
 var presets struct {
 	Controls map[string]map[string][]string
@@ -161,15 +161,11 @@ func loadPresets(filename string) {
 }
 
 func main() {
-	ip := flag.String("ip", "192.168.1.3", "IP Address of Philips Hue hub.")
-	userName := flag.String("username", "HueGoRaspberryPiUser", "Username for Hue hub.")
-	deviceType := flag.String("device_type", "HueGoRaspberryPi", "Device type for Hue hub.")
-
+	hue.Flags()
 	presetsFile := flag.String("presets", "./presets.json", "Presets file to use.")
-
 	flag.Parse()
 
-	lights = hue.Hue{*ip, *userName, *deviceType}
+	lights = hue.FromFlags()
 
 	loadPresets(*presetsFile)
 
